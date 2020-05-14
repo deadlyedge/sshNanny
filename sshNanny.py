@@ -6,9 +6,9 @@ from static import xlogger
 
 logger = xlogger.get_my_logger(__name__)
 
-PROCESS_LINES = 10
-PROCESS_PERCENTAGE = 10
-NOT_COUNT = [
+PROCESS_LINES = 10  # only these command show in 'ssh top' would count
+PROCESS_PERCENTAGE = 10  # if a command's cpu usage% lower than this, it wouldn't count
+NOT_COUNT = [  # some system command should be excluded.
     'kernel_task', 'top', 'launchd', 'backupd',
     'diskimages-helpe', 'ScreenSaverEngin'
 ]
@@ -24,10 +24,6 @@ myDB_Client = pymongo.MongoClient(
 
 myDatabase = myDB_Client['homeMac_usage']
 usageDB = myDatabase.usage
-
-
-def getTime():
-    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
 
 
 def showSSH():
@@ -53,7 +49,7 @@ def showSSH():
         if counter == PROCESS_LINES + 1:
             if lines:
                 usageDB.insert_one({'timestamp': int(time.time()), 'programs': lines})
-                logger.info(f'{lines = }')
+                logger.info(f'{lines = }')  # this info format only work in python 3.8, you may delete the f*...
             else:
                 logger.debug('empty list...')
             lines = []
@@ -62,7 +58,7 @@ def showSSH():
 
 if __name__ == '__main__':
     ssh = paramiko.SSHClient()
-    # ssh.load_system_host_keys()
+    # ssh.load_system_host_keys()  # I don't know what it means actually, it may helps so I just keep it.
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
     while True:
@@ -71,7 +67,7 @@ if __name__ == '__main__':
                         username=config['ssh_user'],
                         password=config['ssh_password'])
         except TimeoutError:
-            logger.error('失联中。。。')
+            logger.error('失联中。。。')  # the host mac maybe sleep or shutdown.  we can wait, right?
             time.sleep(60)
             continue
 
