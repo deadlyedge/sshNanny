@@ -1,0 +1,8 @@
+{
+  "database_address": "your-mongo-address",
+  "database_user": "mongo-user-name",
+  "database_password": "mongo-password",
+  "ssh_address": "machine-you-want(with ssh enabled)",
+  "ssh_user": "username",
+  "ssh_password": "password"
+}
