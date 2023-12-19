@@ -1,4 +1,4 @@
 pymongo==3.10.1
 pandas==1.0.3
-paramiko==2.7.1
+paramiko==3.4.0
 plotly==4.7.1
